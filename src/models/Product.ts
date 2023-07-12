@@ -10,13 +10,13 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "add a product name"],
     },
-    discrition: {
+    discription: {
       type: String,
-      required: [true, "add a product discrition"],
+      required: [true, "add a product discription"],
     },
     imgs: {
       type: Array,
-      required: [true, "add a product img"],
+      required: [true, "add a product imgs"],
     },
   },
   { timestamps: true }

@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routs
 app.use(`${baseUrl}/auth`, AuthRouter);
 app.use(`${baseUrl}`, auth, userRouter);
-app.use(`${baseUrl}/products`, productRouter);
+app.use(`${baseUrl}/products`, auth, productRouter);
 
 // Error handler
 app.use(ErrorMiddelware);
