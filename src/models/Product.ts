@@ -1,6 +1,6 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema(
+export const productSchema = new mongoose.Schema(
   {
     vendore: {
       type: mongoose.Types.ObjectId,
@@ -14,9 +14,17 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "add a product discription"],
     },
-    imgs: {
-      type: Array,
-      required: [true, "add a product imgs"],
+    img: {
+      type: String,
+      required: [true, "add a product img"],
+    },
+    category: {
+      type: String,
+      required: [true, "add category"],
+    },
+    stock: {
+      type: Boolean,
+      required: [true, "add stock status"],
     },
   },
   { timestamps: true }

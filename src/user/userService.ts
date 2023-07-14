@@ -5,7 +5,7 @@ import User from "../models/User";
 import { userDto } from "./dto/userDto";
 import { CreateApiErr } from "../errors/customErr";
 import { isValidObjectId } from "mongoose";
-
+import bcrypt from "bcrypt";
 // /api/v1/profile    |   GET    |   private
 export const profile = asyncHandler(async (req: customReq, res: Response) => {
   res.json(req.user);
@@ -52,5 +52,25 @@ export const deleteUser = asyncHandler(
         else next(CreateApiErr("Not Found", 404));
       } else next(CreateApiErr("don't have an access", 401));
     } else next(CreateApiErr("Not valid id", 400));
+  }
+);
+
+// /api/v1/users/:id    |   PUT    |   private
+export const updateUser = asyncHandler(
+  async (req: customReq, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { name, email, password, newPassword } = req.body;
+    if (String(id) === String(req.user._id)) {
+      const user = await User.findById(id);
+
+      if (await bcrypt.compare(password, String(user?.password))) {
+        const hash = await bcrypt.hash(newPassword, await bcrypt.genSalt(10));
+        const update = await User.updateOne(
+          { _id: id },
+          { $set: { name, email, password: hash } }
+        );
+        res.json(update);
+      } else next(CreateApiErr("wrong password", 400));
+    } else next(CreateApiErr("don't have an access", 401));
   }
 );

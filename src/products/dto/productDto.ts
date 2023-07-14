@@ -1,5 +1,7 @@
 export interface productDto {
   name: string;
   discription: string;
-  imgs: string[];
+  img: string[];
+  stock: boolean;
+  category: string;
 }

@@ -38,8 +38,10 @@ const UserSchema = new mongoose.Schema(
 // hash password before save in database
 UserSchema.pre("save", async function (next) {
   try {
-    const salt: string = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(String(this.password), salt);
+    const hash = await bcrypt.hash(
+      String(this.password),
+      await bcrypt.genSalt(10)
+    );
     this.password = hash;
 
     next();

@@ -9,36 +9,34 @@ import { isValidObjectId } from "mongoose";
 // /api/v1/products    |   GET    |   private
 export const getAllProducts = asyncHandler(
   async (req: customReq, res: Response) => {
-    res.json("all products");
+    const products = await Product.find({});
+    res.json({ products, total: products.length });
   }
 );
 
 // /api/v1/products    |   POST    |   private
 export const addProduct = asyncHandler(
   async (req: customReq, res: Response) => {
-    const { name, discription, imgs } = req.body as productDto;
+    const { name, discription, img } = req.body as productDto;
     const product = await Product.create({
       vendore: req.user._id,
-      name,
-      discription,
-      imgs,
+      ...(req.body as productDto),
     });
     res.json(product);
   }
 );
 
+// /api/v1/products/:id    |   PUT    |   private
 export const updateProduct = asyncHandler(
   async (req: customReq, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { name, discription, imgs } = req.body as productDto;
 
     if (isValidObjectId(id)) {
       const product = await Product.findById(id);
-
       if (product && String(product.vendore) === String(req.user._id)) {
         const update = await Product.updateOne(
           { _id: id },
-          { $set: { name, discription }, $push: { imgs } }
+          { $set: { ...(req.body as productDto) } }
         );
 
         res.json(update);
@@ -47,6 +45,7 @@ export const updateProduct = asyncHandler(
   }
 );
 
+// /api/v1/products/:id    |   DELETE    |   private
 export const deleteProduct = asyncHandler(
   async (req: customReq, res: Response, next: NextFunction) => {
     const { id } = req.params;

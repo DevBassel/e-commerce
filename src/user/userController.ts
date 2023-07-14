@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { deleteUser, getAllUsers, getUserById, profile } from "./userService";
+import {
+  deleteUser,
+  getAllUsers,
+  getUserById,
+  profile,
+  updateUser,
+} from "./userService";
 
 const router = Router();
 
@@ -9,6 +15,6 @@ router.get("/users/:id", getUserById);
 
 router.get("/allUsers", getAllUsers);
 
-router.delete("/users/:id", deleteUser);
+router.route("/users/:id").delete(deleteUser).put(updateUser);
 
 export default router;
