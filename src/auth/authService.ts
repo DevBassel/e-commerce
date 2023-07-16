@@ -13,21 +13,26 @@ import { Cart } from "../models/Cart";
 const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password, rule } = req.body as RegisterDto;
-    if (rule === "vendore" || rule === "user") {
-      const user = await User.create({ name, email, password, rule });
-      await Cart.create({ user: user._id });
-      res.cookie("auth", genToken(user._id), {
-        // cookie is valid 30 day
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        httpOnly: true,
-      });
-      res.json({
-        name: user.name,
-        _id: user._id,
-        email: user.email,
-        rule: user.rule,
-      });
-    } else next(CreateApiErr("enter valid data", 400));
+    if (rule === "admin") {
+      next(CreateApiErr("bad rule ^_^", 400));
+    } else {
+      if (name && email && password && rule) {
+        const user = await User.create({ name, email, password, rule });
+        await Cart.create({ user: user._id });
+
+        res.cookie("auth", genToken(user._id), {
+          // cookie is valid 30 day
+          maxAge: 1000 * 60 * 60 * 24 * 30,
+          httpOnly: true,
+        });
+        res.json({
+          name: user.name,
+          _id: user._id,
+          email: user.email,
+          rule: user.rule,
+        });
+      } else next(CreateApiErr("enter valid data", 400));
+    }
   }
 );
 

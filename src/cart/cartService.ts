@@ -11,6 +11,7 @@ import { Product } from "../models/Product";
 export const getUserCart = asyncHandler(
   async (req: customReq, res: Response) => {
     const cart = await Cart.findOne({ user: req.user._id });
+    console.log(req.user._id);
     res.json(cart?.products);
   }
 );
