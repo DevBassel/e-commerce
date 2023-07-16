@@ -4,4 +4,5 @@ export interface productDto {
   img: string[];
   stock: boolean;
   category: string;
+  price: number;
 }

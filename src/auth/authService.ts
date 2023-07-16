@@ -21,7 +21,12 @@ const register = asyncHandler(
         maxAge: 1000 * 60 * 60 * 24 * 30,
         httpOnly: true,
       });
-      res.json({ token: genToken(user._id) });
+      res.json({
+        name: user.name,
+        _id: user._id,
+        email: user.email,
+        rule: user.rule,
+      });
     } else next(CreateApiErr("enter valid data", 400));
   }
 );
@@ -42,8 +47,10 @@ const login = asyncHandler(
             httpOnly: true,
           });
           res.json({
-            success: true,
-            user: { name: user.name, email: user.email },
+            name: user.name,
+            _id: user._id,
+            email: user.email,
+            rule: user.rule,
           });
         } else next(CreateApiErr("Email or password is wrong", 403));
       } else next(CreateApiErr("User Not Found", 404));

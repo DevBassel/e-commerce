@@ -14,15 +14,11 @@ export const profile = asyncHandler(async (req: customReq, res: Response) => {
 // /api/v1/allUsers    |   GET    |   private
 export const getAllUsers = asyncHandler(
   async (req: customReq, res: Response, next: NextFunction) => {
-    if (req.user.rule === "admin") {
-      const users: userDto | unknown = await User.find({
-        _id: { $ne: req.user._id },
-      }).select("-password -__v");
+    const users: userDto | unknown = await User.find({
+      _id: { $ne: req.user._id },
+    }).select("-password -__v");
 
-      res.json(users);
-    } else {
-      next(CreateApiErr("don't have access", 401));
-    }
+    res.json(users);
   }
 );
 
@@ -46,9 +42,9 @@ export const deleteUser = asyncHandler(
   async (req: customReq, res: Response, next: NextFunction) => {
     const { id } = req.params;
     if (isValidObjectId(id)) {
-      if (req.user.rule === "admin") {
+      if (req.user.rule === "admin" || String(req.user._id) === id) {
         const user = await User.findByIdAndDelete(id);
-        if (user) res.json(user);
+        if (user) res.json({ success: true });
         else next(CreateApiErr("Not Found", 404));
       } else next(CreateApiErr("don't have an access", 401));
     } else next(CreateApiErr("Not valid id", 400));

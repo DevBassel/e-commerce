@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routs
 app.use(`${baseUrl}/auth`, AuthRouter);
 app.use(`${baseUrl}`, auth, userRouter);
-app.use(`${baseUrl}/products`, auth, productRouter);
+app.use(`${baseUrl}/products`, auth,  productRouter);
 app.use(`${baseUrl}/cart`, auth, cartRouter);
 
 // Error handler

@@ -46,25 +46,39 @@ export const updateItem = asyncHandler(
   async (req: customReq, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { count } = req.body;
-    if (isValidObjectId(id)) {
+    if (isValidObjectId(id) && count >= 1) {
       const product = await Product.findById(id);
-      if (product && product.stock) {
+      if (product) {
         const update = await Cart.updateOne(
           {
             user: req.user._id,
             "products.productId": id,
           },
-          {
-            $set: { "products.$.count": count },
-          }
+          { $set: { "products.$.count": count } }
         );
         res.json(update);
-      } else next(CreateApiErr("product out of stock"));
-    } else next(CreateApiErr("not valid ID"));
+      } else next(CreateApiErr("product not found", 404));
+    } else next(CreateApiErr("not valid Data", 400));
   }
 );
 
 // /api/v1/cart/:id    |   DELETE    |   private
+export const removeCartItem = asyncHandler(
+  async (req: customReq, res: Response) => {
+    const { id } = req.params;
+    const removeItem = await Cart.updateOne(
+      {
+        user: req.user._id,
+      },
+      {
+        $pull: { products: { _id: id } },
+      }
+    );
+    res.json(removeItem);
+  }
+);
+
+// /api/v1/cart/   |   DELETE    |   private
 export const removeAllItem = asyncHandler(
   async (req: customReq, res: Response, next: NextFunction) => {
     const resetCart = await Cart.updateOne(

@@ -2,13 +2,19 @@ import { Router } from "express";
 import {
   addProduct,
   deleteProduct,
-  getAllProducts,
+  searchProducts,
+  getSingleProduct,
   updateProduct,
 } from "./productsService";
+import isVendore from "../middelware/isVendore";
 
 const router = Router();
 
-router.route("/").get(getAllProducts).post(addProduct);
-router.route("/:id").put(updateProduct).delete(deleteProduct);
+router.route("/").get(searchProducts).post(isVendore, addProduct);
+router
+  .route("/:id")
+  .get(getSingleProduct)
+  .put(isVendore, updateProduct)
+  .delete(isVendore, deleteProduct);
 
 export default router;

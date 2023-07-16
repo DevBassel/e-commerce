@@ -26,6 +26,10 @@ export const productSchema = new mongoose.Schema(
       type: Boolean,
       required: [true, "add stock status"],
     },
+    price: {
+      type: Number,
+      required: [true, "add product price"],
+    },
   },
   { timestamps: true }
 );
