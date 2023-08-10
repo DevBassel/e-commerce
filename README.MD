@@ -40,8 +40,8 @@ axios.post(URl, usearData).then((respons) => console.log(respons.data));
 ```json
 {
   "_id": "64b43449d649604aee58390d",
-  "name": "bta33",
-  "email": "bat33@gmail.com",
+  "name": "bassel",
+  "email": "bassel@gmail.com",
   "rule": "vendore"
 }
 ```
