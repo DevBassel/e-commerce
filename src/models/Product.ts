@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { commentSchema } from "./Comments";
 
 export const productSchema = new mongoose.Schema(
   {
@@ -30,6 +31,10 @@ export const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, "add product price"],
     },
+    // comments: {
+    //   type: [commentSchema],
+    //   default: [],
+    // },
   },
   { timestamps: true }
 );

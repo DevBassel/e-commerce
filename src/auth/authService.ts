@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { CreateApiErr } from "../errors/customErr";
 import mongoose from "mongoose";
-import { Cart } from "../models/Cart";
 
 // /api/v1/register    |   POST    |   public
 const register = asyncHandler(
@@ -18,7 +17,6 @@ const register = asyncHandler(
     } else {
       if (name && email && password && rule) {
         const user = await User.create({ name, email, password, rule });
-        await Cart.create({ user: user._id });
 
         res.cookie("auth", genToken(user._id), {
           // cookie is valid 30 day

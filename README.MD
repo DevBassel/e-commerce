@@ -40,8 +40,8 @@ axios.post(URl, usearData).then((respons) => console.log(respons.data));
 ```json
 {
   "_id": "64b43449d649604aee58390d",
-  "name": "bta33",
-  "email": "bat33@gmail.com",
+  "name": "bassel",
+  "email": "bassel@gmail.com",
   "rule": "vendore"
 }
 ```
@@ -361,7 +361,7 @@ axios.get(URl).then((respons) => console.log(respons.data));
 
 ```js
 import axios from "axios";
-const URL = "{{domin}}/api/v1/cart/64b2c8e7a7ba88c3cde8a188";
+const URL = "{{domin}}/api/v1/cart/64b2c8e7a7ba88c3cde8a188"; // cart item (_id)
 const update = {
   count: 2,
 };

@@ -1,26 +1,14 @@
 import mongoose, { Schema } from "mongoose";
-// import { productSchema } from "./Product";
-// import { extendSchema } from "../help";
+import { productSchema } from "./Product";
+import { extendSchema } from "../help";
 
-// const cartProduct: Schema = extendSchema(
-//   {
-//     productId: mongoose.Types.ObjectId,
-//     count: { type: Number, required: true, default: 1 },
-//   },
-//   productSchema,
-//   ["vendore", "discription", "stock"]
-// );
-
-const cartItem: Schema = new mongoose.Schema(
+const cartProduct: Schema = extendSchema(
   {
-    productId: {
-      type: mongoose.Types.ObjectId,
-    },
-    count: {
-      type: Number,
-    },
+    productId: mongoose.Types.ObjectId,
+    count: { type: Number, required: true, default: 1 },
   },
-  { timestamps: true }
+  productSchema,
+  ["vendore", "discription", "stock"]
 );
 
 const cartSchema: Schema = new mongoose.Schema(
@@ -31,7 +19,7 @@ const cartSchema: Schema = new mongoose.Schema(
       ref: "User",
     },
     products: {
-      type: [cartItem],
+      type: [cartProduct],
       required: [true, "add product data"],
       default: [],
     },

@@ -22,21 +22,45 @@ export const addItem = asyncHandler(
     const { productId, count } = req.body as CartItemDto;
     const userCart = await Cart.findOne({ user: req.user._id });
 
+    if (!userCart) {
+      await Cart.create({ user: req.user._id });
+    }
+
     if (productId && count && isValidObjectId(productId)) {
       const product = await Product.findById(productId);
 
+      // check product found
       if (product && product.stock) {
         const check: boolean = userCart?.products.find(
           (el: any) => String(el.productId) === productId
         );
 
         if (!check) {
+          const { name, img, price } = product;
           const add = await Cart.updateOne(
             { user: req.user._id },
-            { $push: { products: { productId, count } } }
+            {
+              $push: {
+                products: { productId: product._id, count, name, img, price },
+              },
+            }
           );
           res.json(add);
-        } else next(CreateApiErr("this item already in cart"));
+        } else {
+          // if item in cart update count +1
+          // catch item
+          const currnt = userCart?.products.filter(
+            (el: any) => String(el.productId) === productId
+          );
+          const update = await Cart.updateOne(
+            {
+              user: req.user._id,
+              "products.productId": productId,
+            },
+            { $set: { "products.$.count": currnt[0].count + 1 } }
+          );
+          res.json(update);
+        }
       } else next(CreateApiErr("product out of stock"));
     } else next(CreateApiErr("not valid data", 400));
   }
@@ -48,17 +72,16 @@ export const updateItem = asyncHandler(
     const { id } = req.params;
     const { count } = req.body;
     if (isValidObjectId(id) && count >= 1) {
-      const product = await Product.findById(id);
-      if (product) {
-        const update = await Cart.updateOne(
-          {
-            user: req.user._id,
-            "products.productId": id,
-          },
-          { $set: { "products.$.count": count } }
-        );
+      const update = await Cart.updateOne(
+        {
+          user: req.user._id,
+          "products._id": id,
+        },
+        { $set: { "products.$.count": count } }
+      );
+      if (update.modifiedCount) {
         res.json(update);
-      } else next(CreateApiErr("product not found", 404));
+      } else next(CreateApiErr("cart item not found", 404));
     } else next(CreateApiErr("not valid Data", 400));
   }
 );
