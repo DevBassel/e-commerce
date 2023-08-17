@@ -12,12 +12,25 @@ import userRouter from "./user/userController";
 import productRouter from "./products/productsController";
 import cartRouter from "./cart/cartController";
 import cors from "cors";
+import morgan from "morgan";
+import path from "path";
+import fs from "fs";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 const baseUrl: string = "/api/v1";
 
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  {
+    flags: "a",
+  }
+);
+
+// setup the logger
+app.use(morgan("combined", { stream: accessLogStream }));
 // Middelware
+app.use(morgan("combined"));
 app.use(express.json({ limit: "20kb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
