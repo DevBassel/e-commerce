@@ -1,9 +1,18 @@
 import { Router } from "express";
-import { login, passwordReset, forgetPassword, register, resetPage } from "./authService";
+import {
+  login,
+  passwordReset,
+  forgetPassword,
+  register,
+  resetPage,
+  verifyEmail,
+} from "./authService";
 
 const router = Router();
 
 router.post("/register", register);
+
+router.post("/register/verify", verifyEmail);
 
 router.post("/login", login);
 

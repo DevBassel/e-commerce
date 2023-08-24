@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+const emailRegEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -13,12 +15,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "email is required"],
       unique: [true, "this email is exist"],
-      validate: [
-        (val: string) => {
-          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(val);
-        },
-        "email not valid",
-      ],
+      validate: [(val: string) => emailRegEx.test(val), "email not valid"],
     },
     password: {
       type: String,
@@ -28,6 +25,14 @@ const UserSchema = new mongoose.Schema(
     rule: {
       type: String,
       required: [true, "add your rule"],
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    code: {
+      type: Number,
+      default: 0,
     },
   },
   {
